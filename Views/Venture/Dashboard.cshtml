@@ -1,0 +1,53 @@
+@model List<Venture>
+
+
+<header>
+    <h1>Welcome to the Dojo Activity Center</h1>
+    <a asp-action="LogOut" asp-controller="Home">Logout</a>
+</header>
+
+<div class="table table-hover">
+    <table>
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Date and Time</th>
+                <th>Duration</th>
+                <th>Event Cordinator</th>
+                <th># of Participants</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ( var v in @Model)
+            {
+                <tr>
+                    <td><a asp-action="ShowVenture" asp-controller="Venture" asp-route-ventureId="@v.VentureId"> @v.Title</a></td>
+                    <td>@v.Date.ToLongDateString() at @v.Date.ToShortTimeString()</td>
+                    <td>@v.Duration</td>
+                    <td>@v.Planner.FirstName</td>
+                    <td>@v.GuestList.Count</td>
+                    <td>
+                        @if(ViewBag.User.UserId == v.Planner.UserId)
+                        {
+                            <a asp-action="DeleteVenture" asp-controller="Venture" asp-route-ventureId="@v.VentureId">Delete</a>
+                        }
+                        else
+                        {
+                            @if(v.GuestList.All( r => r.UserId != ViewBag.User.UserId))
+                            {
+                                <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@v.VentureId" asp-route-userId="@ViewBag.User.UserId" asp-route-status="rsvp">JOIN</a>
+                            }
+                            @if(v.GuestList.Any( r => r.UserId == ViewBag.User.UserId))
+                            {
+                                <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@v.VentureId" asp-route-userId="@ViewBag.User.UserId" asp-route-status="backout">LEAVE</a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<a asp-action="NewVenture" asp-controller="Venture" class="btn btn-warning">Add New Activity</a>

@@ -1,0 +1,83 @@
+@model Venture
+@* @model List<Venture> *@
+
+<a asp-controller="Venture" asp-action="Dashboard">HOME</a>
+<a asp-controller="Home" asp-action="Logout">LOGOUT</a>
+
+<h1>@Model.Title</h1>
+
+<h2>Event Coordinator: @Model.Planner.FirstName</h2>
+<p>Description: @Model.Description</p>
+
+<div>
+    <h3>People Attending: </h3>
+    <p>
+        @foreach ( var r in @Model.GuestList)
+        {
+            <p> @r.Guest.FirstName</p>
+        }
+    </p>
+</div>
+
+
+
+
+
+@if(ViewBag.User.UserId == Model.Planner.UserId)
+{
+    <a asp-action="DeleteVenture" asp-controller="Venture" asp-route-ventureId="@Model.VentureId">Delete</a>
+}
+else
+{
+    @if(Model.GuestList.All( r => r.UserId != ViewBag.User.UserId))
+    {
+        <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@Model.VentureId" asp-route-userId="@ViewBag.User.UserId" asp-route-status="rsvp">JOIN</a>
+    }
+    @if(Model.GuestList.Any( r => r.UserId == ViewBag.User.UserId))
+    {
+        <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@Model.VentureId" asp-route-userId="@ViewBag.User.UserId" asp-route-status="backout">LEAVE</a>
+    }
+}
+
+
+
+
+
+
+@* <a asp-controller="Venture" asp-action="DeleteVenture">DELETE</a> *@
+@* <a asp-controller="Ventrue" asp-action="Rsvp">JOIN</a> *@
+@* <a asp-controller="Venture" asp-action="Rsvp">LEAVE</a> *@
+
+
+
+@* <table> *@
+    @* <thead> *@
+        @* <tr> *@
+            @* <th>Action</th> *@
+        @* </tr> *@
+    @* </thead> *@
+    @* <tbody> *@
+        @* @foreach ( var v in @Model.GuestList) *@
+        @* { *@
+            @* <tr> *@
+                @* <td> *@
+                    @* @if(ViewBag.User.UserId == v.Planner.UserId) *@
+                    @* { *@
+                        @* <a asp-action="DeleteVenture" asp-controller="Venture" asp-route-ventureId="@v.VentureId">Delete</a> *@
+                    @* } *@
+                    @* else *@
+                    @* { *@
+                        @* @if(v.GuestList.All( r => r.UserId != ViewBag.User.UserId)) *@
+                        @* { *@
+                            @* <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@v.VentureId" asp-route-userId="@ViewBag.User.UserId" asp-route-status="rsvp">JOIN</a> *@
+                        @* } *@
+                        @* @if(v.GuestList.Any( r=> r.UserId == ViewBag.User.UserId)) *@
+                        @* { *@
+                            @* <a asp-action="Rsvp" asp-controller="Venture" asp-route-ventureId="@v.VentureId" asp-route-userId="@ViewBag.User.Userid" asp-route-status="rsvp">LEAVE</a> *@
+                        @* } *@
+                    @* } *@
+                @* </td> *@
+            @* </tr> *@
+        @* } *@
+    @* </tbody> *@
+@* </table> *@
